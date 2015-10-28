@@ -2,6 +2,9 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2Point.h"
+#include "ModulePhysics.h"
+
+struct SDL_Texture;
 
 class ModulePlayer : public Module
 {
@@ -12,7 +15,9 @@ public:
 	bool Start();
 	update_status Update();
 	bool CleanUp();
+	void RespawnBall();
 
 public:
-
+	PhysBody* ball;
+	SDL_Texture* ball_texture;
 };

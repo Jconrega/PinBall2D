@@ -28,6 +28,8 @@ bool ModuleSceneIntro::Start()
 	circle = App->textures->Load("pinball/ball.png");
 	background = App->textures->Load("pinball/background.png");
 
+
+
 	CreateMap();
 
 	return ret;
@@ -46,10 +48,11 @@ update_status ModuleSceneIntro::Update()
 {
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(),16, b2_dynamicBody));
+		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(),8, b2_dynamicBody));
 		// TODO 8: Make sure to add yourself as collision callback to the circle you creates
 	}
 
+	
 	App->renderer->Blit(background, 0, 0);
 
 	// All draw functions ------------------------------------------------------
@@ -200,6 +203,8 @@ void ModuleSceneIntro::CreateMap()
 	background_items.add(App->physics->CreateCircle(230, 133, 17, b2_staticBody));
 	background_items.add(App->physics->CreateCircle(139, 133, 17, b2_staticBody));
 	background_items.add(App->physics->CreateCircle(77, 195, 17, b2_staticBody));
+
+	
 
 	
 }
