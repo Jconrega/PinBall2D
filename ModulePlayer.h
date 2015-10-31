@@ -35,10 +35,10 @@ private:
 public:
 	
 	Entity flipper_right;
-	//Entity flipper_left; TODO: just do it
+	Entity flipper_left; 
 
 	PhysBody* flipper_circle_right;
-	//PhysBody* flipper_circle_left;
+	PhysBody* flipper_circle_left;
 
 
 
