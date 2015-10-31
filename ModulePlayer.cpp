@@ -9,7 +9,7 @@
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	//TODO: Set to NULL all pointers of player
-	flipper_circle_right = flipper_circle_left = NULL;
+
 }
 
 ModulePlayer::~ModulePlayer()
@@ -47,6 +47,18 @@ update_status ModulePlayer::Update()
 		flipper_left.body->AngularImpulse(-360);
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
+	{
+		plunger.body->Force(0, -600, 0, 0);
+	}
+	else
+	{
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) != KEY_DOWN && App->input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT)
+		{
+			plunger.body->Force(0, -400, 0, 0);
+		}
+	}
+
 	Draw();
 
 	return UPDATE_CONTINUE;
@@ -61,6 +73,9 @@ void ModulePlayer::Draw()
 
 	flipper_left.body->GetPosition(x, y);
 	App->renderer->Blit(flipper_left.texture, x, y, NULL, 1.0f, flipper_left.body->GetRotation(), 0, 0);
+
+	plunger.body->GetPosition(x, y);
+	App->renderer->Blit(plunger.texture, x, y, NULL, 1.0F, plunger.body->GetRotation(), 0, 0);
 }
 
 void ModulePlayer::CreateMap()
@@ -68,6 +83,7 @@ void ModulePlayer::CreateMap()
 	//TODO: Load all textures here
 	flipper_right.texture = App->textures->Load("pinball/flipper_right.png");
 	flipper_left.texture = App->textures->Load("pinball/flipper_left.png");
+	plunger.texture = App->textures->Load("pinball/plunger.png");
 
 	//TODO: Create all bodies here
 	int flipper_r[12] = {
@@ -80,8 +96,8 @@ void ModulePlayer::CreateMap()
 	};
 
 	flipper_right.body = App->physics->CreatePolygon(232, 523, 0, 0, flipper_r, 12, b2_dynamicBody);
-	flipper_circle_right = App->physics->CreateCircle(232+20, 523 +22, 2, b2_staticBody);
-	App->physics->CreateRevoluteJoint(flipper_right.body, flipper_circle_right, 55, 9, 0, 0, -20, 20);
+	flipper_right.anchor = App->physics->CreateCircle(232+20, 523 +22, 2, b2_staticBody);
+	App->physics->CreateRevoluteJoint(flipper_right.body, flipper_right.anchor, 55, 9, 0, 0, -20, 20);
 
 	int flipper_l[12] = {
 		63, 14,
@@ -93,8 +109,13 @@ void ModulePlayer::CreateMap()
 	};
 
 	flipper_left.body = App->physics->CreatePolygon(122, 522, 0, 0, flipper_l, 12, b2_dynamicBody);
-	flipper_circle_left = App->physics->CreateCircle(121, 544, 2, b2_staticBody);
-	App->physics->CreateRevoluteJoint(flipper_left.body, flipper_circle_left, 9, 11, 0, 0, -20, 20);
+	flipper_left.anchor = App->physics->CreateCircle(121, 544, 2, b2_staticBody);
+	App->physics->CreateRevoluteJoint(flipper_left.body, flipper_left.anchor, 9, 11, 0, 0, -20, 20);
+
+	plunger.body = App->physics->CreateRectangle(366, 600, 14, 77, b2_dynamicBody);
+	plunger.anchor = App->physics->CreateRectangle(355, 507, 5, 5, b2_staticBody);
+	App->physics->CreatePrismaticJoint(plunger.body, plunger.anchor, 0, 0, 12, 0, -80, -40);
+
 }
 
 

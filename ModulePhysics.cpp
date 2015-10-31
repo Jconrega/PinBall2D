@@ -232,10 +232,10 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, b2BodyType type)
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, b2BodyType type)
 {
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	body.type = type;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);
@@ -382,6 +382,26 @@ void ModulePhysics::CreateRevoluteJoint(PhysBody* body_a, PhysBody* body_b, int 
 	world->CreateJoint(&joint_def);
 }
 
+void ModulePhysics::CreatePrismaticJoint(PhysBody* body_a, PhysBody* body_b, int anchor_x_a, int anchor_y_a, int anchor_x_b, int anchor_y_b, int limit_low, int limit_up)
+{
+	b2PrismaticJointDef joint;
+
+	joint.bodyA = body_a->body;
+	joint.bodyB = body_b->body;
+
+	joint.collideConnected = false;
+
+	joint.localAxisA.Set(0, 1);
+	joint.localAnchorA.Set(anchor_x_a, anchor_y_a);
+	joint.localAnchorB.Set(anchor_x_b, anchor_y_b);
+
+	joint.enableLimit = true;
+	joint.lowerTranslation = PIXEL_TO_METERS(limit_low);
+	joint.upperTranslation = PIXEL_TO_METERS(limit_up);
+
+	world->CreateJoint(&joint);
+}
+
 //Contact functions-----------------------------------------------------------------------------------------------------------------
 
 void ModulePhysics::BeginContact(b2Contact* contact)
@@ -464,5 +484,13 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 void PhysBody::AngularImpulse(int degrees)
 {
 	body->ApplyAngularImpulse(DEGTORAD * degrees, true);
+}
+
+void PhysBody::Force(int force_x, int force_y, int point_x, int point_y)
+{
+	b2Vec2 force(force_x, force_y);
+	b2Vec2 point(point_x, point_y);
+
+	body->ApplyForce(force, point, true);
 }
 

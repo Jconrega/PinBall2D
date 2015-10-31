@@ -46,7 +46,7 @@ update_status ModuleSceneIntro::Update()
 {
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(),16, b2_dynamicBody));
+		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(),7, b2_dynamicBody));
 	}
 
 	App->renderer->Blit(background, 0, 0);
@@ -73,7 +73,7 @@ update_status ModuleSceneIntro::Update()
 void ModuleSceneIntro::CreateMap()
 {
 
-		int background[58] = {
+	int background[58] = {
 		59, 314,
 		26, 274,
 		27, 149,
@@ -92,8 +92,8 @@ void ModuleSceneIntro::CreateMap()
 		363, 122,
 		373, 159,
 		375, 183,
-		377, 580,
-		360, 580,
+		377, 649,
+		359, 648,
 		359, 280,
 		352, 278,
 		320, 314,

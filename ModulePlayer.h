@@ -8,11 +8,12 @@ struct SDL_Texture;
 
 struct Entity
 {
-	SDL_Texture* texture;
-	PhysBody*	 body;
+	SDL_Texture*	texture;
+	PhysBody*		body;
+	PhysBody*		anchor;
 	uint fx;
 
-	Entity() : texture(NULL), body(NULL)
+	Entity() : texture(NULL), body(NULL), anchor(NULL)
 	{}
 
 };
@@ -36,10 +37,6 @@ public:
 	
 	Entity flipper_right;
 	Entity flipper_left; 
-
-	PhysBody* flipper_circle_right;
-	PhysBody* flipper_circle_left;
-
-
+	Entity plunger;
 
 };

@@ -26,6 +26,7 @@ public:
 
 	//Utilities
 	void AngularImpulse(int degrees);
+	void Force(int force_x, int force_y, int point_x, int point_y);
 
 public:
 	int width, height;
@@ -46,12 +47,13 @@ public:
 	bool CleanUp();
 
 	PhysBody* CreateCircle(int x, int y, int radius, b2BodyType type);
-	PhysBody* CreateRectangle(int x, int y, int width, int height);
+	PhysBody* CreateRectangle(int x, int y, int width, int height, b2BodyType type);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType type);
 	PhysBody* CreatePolygon(int x, int y, int width, int height, int* points, int size, b2BodyType type);
 
 	void CreateRevoluteJoint(PhysBody* body_a, PhysBody* body_b, int anchor_a_x, int anchor_a_y, int anchor_b_x, int anchor_b_y, int min_angle = -360, int max_angle = 360);
+	void CreatePrismaticJoint(PhysBody* body_a, PhysBody* body_b, int anchor_x_a, int anchor_y_a, int anchor_x_b, int anchor_y_b, int limit_low, int limit_up);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
