@@ -24,6 +24,9 @@ public:
 	bool Contains(int x, int y) const;
 	int RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const;
 
+	//Utilities
+	void AngularImpulse(int degrees);
+
 public:
 	int width, height;
 	b2Body* body;
@@ -31,7 +34,7 @@ public:
 };
 
 // Module --------------------------------------
-class ModulePhysics : public Module, public b2ContactListener // TODO
+class ModulePhysics : public Module, public b2ContactListener 
 {
 public:
 	ModulePhysics(Application* app, bool start_enabled = true);
@@ -46,6 +49,9 @@ public:
 	PhysBody* CreateRectangle(int x, int y, int width, int height);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType type);
+	PhysBody* CreatePolygon(int x, int y, int width, int height, int* points, int size, b2BodyType type);
+
+	void CreateRevoluteJoint(PhysBody* body_a, PhysBody* body_b, int anchor_a_x, int anchor_a_y, int anchor_b_x, int anchor_b_y, int min_angle = -360, int max_angle = 360);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
@@ -57,4 +63,6 @@ private:
 	b2MouseJoint* mouse_joint;
 	b2Body* ground;
 	b2Body* mouse_clicked;
+
+	p2List<PhysBody*> body_list; //Save all bodies to destroy them on clean up
 };
