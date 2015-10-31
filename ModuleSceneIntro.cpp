@@ -47,7 +47,6 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(),16, b2_dynamicBody));
-		// TODO 8: Make sure to add yourself as collision callback to the circle you creates
 	}
 
 	App->renderer->Blit(background, 0, 0);
@@ -147,12 +146,12 @@ void ModuleSceneIntro::CreateMap()
 	};
 	background_items.add(App->physics->CreateChain(0, 0, triangle_l, 10, b2_staticBody));
 
-	int triangle_r[6] = {
+	/*int triangle_r[6] = {
 		262, 502,
 		300, 487,
 		293, 447
 	};
-	background_items.add(App->physics->CreateChain(0, 0, triangle_r, 6, b2_staticBody));
+	background_items.add(App->physics->CreateChain(0, 0, triangle_r, 6, b2_staticBody));*/
 
 	int bar_down_l[12] = {
 		68, 122,
