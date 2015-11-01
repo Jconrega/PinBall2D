@@ -46,7 +46,7 @@ update_status ModuleSceneIntro::Update()
 {
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(),16, b2_dynamicBody));
+		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(),7, b2_dynamicBody));
 	}
 
 	App->renderer->Blit(background, 0, 0);
@@ -72,33 +72,40 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::CreateMap()
 {
-	int background[48] = {
-		20, 570,
-		20, 415,
-		57, 380,
-		57, 311,
-		24, 270,
-		27, 138,
-		40, 92,
-		60, 62,
-		80, 42,
-		103, 25,
-		120, 16,
-		247, 18,
-		282, 32,
-		310, 52,
-		331, 72,
-		351, 100,
-		368, 139,
-		374, 160,
-		374, 251,
-		320, 310,
-		319, 380,
-		346, 411,
-		347, 573,
-		18, 575
+
+	int background[58] = {
+		59, 314,
+		26, 274,
+		27, 149,
+		31, 126,
+		39, 100,
+		52, 76,
+		72, 51,
+		92, 34,
+		109, 23,
+		119, 19,
+		248, 19,
+		277, 31,
+		301, 45,
+		326, 66,
+		346, 90,
+		363, 122,
+		373, 159,
+		375, 183,
+		377, 649,
+		359, 648,
+		359, 280,
+		352, 278,
+		320, 314,
+		320, 384,
+		349, 413,
+		349, 647,
+		21, 647,
+		20, 416,
+		58, 382
 	};
-	background_items.add(App->physics->CreateChain(0, 0, background, 48, b2_staticBody));
+
+	background_items.add(App->physics->CreateChain(0, 0, background, 58, b2_staticBody));
 
 	int metal_l[6] = {
 		42, 541,
@@ -146,12 +153,12 @@ void ModuleSceneIntro::CreateMap()
 	};
 	background_items.add(App->physics->CreateChain(0, 0, triangle_l, 10, b2_staticBody));
 
-	/*int triangle_r[6] = {
+	int triangle_r[6] = {
 		262, 502,
 		300, 487,
 		293, 447
 	};
-	background_items.add(App->physics->CreateChain(0, 0, triangle_r, 6, b2_staticBody));*/
+	background_items.add(App->physics->CreateChain(0, 0, triangle_r, 6, b2_staticBody));
 
 	int bar_down_l[12] = {
 		68, 122,
