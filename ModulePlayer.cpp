@@ -65,9 +65,15 @@ update_status ModulePlayer::Update()
 			plunger.body->Force(0, -400, 0, 0);
 		}
 	}
+	for (int i = 0; i < lives; i++)
+	{
+		App->renderer->Blit(ball_lives, 510 - (20 * i), 127);
+	}
+	
 
 	Draw();
 
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -95,7 +101,7 @@ void ModulePlayer::CreateMap()
 	flipper_right.texture = App->textures->Load("pinball/flipper_right.png");
 	flipper_left.texture = App->textures->Load("pinball/flipper_left.png");
 	plunger.texture = App->textures->Load("pinball/plunger.png");
-
+	ball_lives = ball.texture;
 	//TODO: Create all bodies here
 
 	ball.body = App->physics->CreateCircle(367, 470, 7, b2_dynamicBody);

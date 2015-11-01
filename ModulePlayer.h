@@ -39,7 +39,9 @@ public:
 	
 	Entity ball;
 	iPoint ball_respawn;
-	uint lives;
+	int lives;
+
+	SDL_Texture* ball_lives;
 
 	Entity flipper_right;
 	Entity flipper_left; 
