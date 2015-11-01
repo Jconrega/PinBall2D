@@ -68,6 +68,9 @@ void ModulePlayer::Draw()
 {
 	int x, y;
 
+	ball.body->GetPosition(x, y);
+	App->renderer->Blit(ball.texture, x, y, NULL, 1.0f, ball.body->GetRotation());
+
 	flipper_right.body->GetPosition(x, y);
 	App->renderer->Blit(flipper_right.texture, x, y, NULL, 1.0f, flipper_right.body->GetRotation(), 0, 0);
 
@@ -81,11 +84,15 @@ void ModulePlayer::Draw()
 void ModulePlayer::CreateMap()
 {
 	//TODO: Load all textures here
+	ball.texture = App->textures->Load("pinball/ball.png");
 	flipper_right.texture = App->textures->Load("pinball/flipper_right.png");
 	flipper_left.texture = App->textures->Load("pinball/flipper_left.png");
 	plunger.texture = App->textures->Load("pinball/plunger.png");
 
 	//TODO: Create all bodies here
+
+	ball.body = App->physics->CreateCircle(367, 470, 7, b2_dynamicBody);
+
 	int flipper_r[12] = {
 		1, 7,
 		57, 1,

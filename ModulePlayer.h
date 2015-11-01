@@ -35,8 +35,9 @@ private:
 
 public:
 	
+	Entity ball;
+
 	Entity flipper_right;
 	Entity flipper_left; 
 	Entity plunger;
-
 };
