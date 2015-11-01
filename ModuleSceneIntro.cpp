@@ -28,7 +28,7 @@ bool ModuleSceneIntro::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	circle = App->textures->Load("pinball/ball.png");
-	background = App->textures->Load("pinball/background.png");
+	background = App->textures->Load("pinball/background_done.png");
 
 	CreateMap();
 
