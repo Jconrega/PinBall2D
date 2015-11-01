@@ -204,7 +204,7 @@ update_status ModulePhysics::PostUpdate()
 
 //Create functions-----------------------------------------------------------------------------------------------------------
 
-PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, b2BodyType type)
+PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, b2BodyType type, bool sensor)
 {
 	b2BodyDef body;
 	body.type = type;
@@ -219,6 +219,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, b2BodyType type)
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
 	fixture.restitution = 0.0f;
+	fixture.isSensor = sensor;
 
 	b->CreateFixture(&fixture);
 
@@ -404,7 +405,7 @@ void ModulePhysics::CreatePrismaticJoint(PhysBody* body_a, PhysBody* body_b, int
 
 //Contact functions-----------------------------------------------------------------------------------------------------------------
 
-void ModulePhysics::BeginContact(b2Contact* contact)
+void ModulePhysics::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 {
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();

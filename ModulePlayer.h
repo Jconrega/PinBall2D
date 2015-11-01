@@ -33,10 +33,14 @@ private:
 	
 	void CreateMap();
 
+	void RespawnBall();
+
 public:
 	
+	Entity ball;
+	iPoint ball_respawn;
+
 	Entity flipper_right;
 	Entity flipper_left; 
 	Entity plunger;
-
 };
