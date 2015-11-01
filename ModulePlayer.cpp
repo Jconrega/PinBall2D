@@ -20,6 +20,8 @@ bool ModulePlayer::Start()
 
 	ball_texture = App->textures->Load("pinball/ball.png");
 
+	RespawnBall();
+
 	return true;
 }
 
@@ -40,6 +42,9 @@ update_status ModulePlayer::Update()
 	{
 		RespawnBall();
 	}
+
+	if (ball->body->GetPosition().y == 580)
+		RespawnBall();
 	return UPDATE_CONTINUE;
 }
 
