@@ -228,7 +228,7 @@ void ModuleSceneIntro::CreateMap()
 	};
 	App->physics->CreateChain(0, 0, bar_up_r, 12, b2_staticBody);
 
-	bumper1.body = App->physics->CreateCircle(291, 195, 16, b2_staticBody);
+	bumper1.body = App->physics->CreateCircle(291, 195, 16, b2_staticBody, true);
 	bumper2.body = App->physics->CreateCircle(139, 267, 16, b2_staticBody);
 	bumper3.body = App->physics->CreateCircle(230, 267, 16, b2_staticBody);
 	bumper4.body = App->physics->CreateCircle(230, 133, 16, b2_staticBody);
