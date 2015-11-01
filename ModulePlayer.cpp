@@ -6,10 +6,13 @@
 #include "ModuleRender.h"
 #include "ModuleInput.h"
 
+#define MAX_LIVES 5
+
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	ball_respawn.x = 367;
 	ball_respawn.y = 470;
+	lives = MAX_LIVES;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -134,6 +137,11 @@ void ModulePlayer::RespawnBall()
 {
 	b2Vec2 position(PIXEL_TO_METERS(ball_respawn.x), PIXEL_TO_METERS(ball_respawn.y));
 	ball.body->body->SetTransform(position, ball.body->GetRotation());
+
+	if (lives-1 < 0)
+		lives = MAX_LIVES;
+	else
+		lives--;
 }
 
 

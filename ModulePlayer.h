@@ -39,6 +39,7 @@ public:
 	
 	Entity ball;
 	iPoint ball_respawn;
+	uint lives;
 
 	Entity flipper_right;
 	Entity flipper_left; 
