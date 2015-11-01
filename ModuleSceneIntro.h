@@ -46,6 +46,8 @@ public:
 
 	SDL_Texture* background;
 
+	p2List<Bumper*> bump_list;
+
 	Bumper bumper1; //Start left up and rotate clockwise
 	Bumper bumper2;
 	Bumper bumper3;

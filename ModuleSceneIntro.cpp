@@ -7,6 +7,8 @@
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
 
+#define LIGHT_LIFE 10
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	circle  = NULL;
@@ -60,29 +62,23 @@ void ModuleSceneIntro::Draw()
 
 	App->renderer->Blit(background, 0, 0);
 
-	bumper1.body->GetPosition(x, y);
-	if (bumper1.life > 0)
+	//Draw all bumpers
+	p2List_item<Bumper*>* item;
+	item = bump_list.getFirst();
+
+	while (item != NULL)
 	{
-		bumper1.life--;
-		App->renderer->Blit(bumper1.light, x, y);
+		item->data->body->GetPosition(x, y);
+		if (item->data->life > 0)
+		{
+			item->data->life--;
+			App->renderer->Blit(item->data->light, x, y);
+		}
+		else
+			App->renderer->Blit(item->data->idle, x, y);
+		item = item->next;
 	}
-	else
-	App->renderer->Blit(bumper1.idle, x, y);
 
-	bumper2.body->GetPosition(x, y);
-	App->renderer->Blit(bumper2.idle, x, y);
-
-	bumper3.body->GetPosition(x, y);
-	App->renderer->Blit(bumper3.idle, x, y);
-
-	bumper4.body->GetPosition(x, y);
-	App->renderer->Blit(bumper4.idle, x, y);
-
-	bumper5.body->GetPosition(x, y);
-	App->renderer->Blit(bumper5.idle, x, y);
-
-	bumper6.body->GetPosition(x, y);
-	App->renderer->Blit(bumper6.idle, x, y);
 
 	//Draw all circles (DEBUG)
 	p2List_item<PhysBody*>* c = circles.getFirst();
@@ -100,6 +96,8 @@ void ModuleSceneIntro::CreateMap()
 {
 	bumper1.light = bumper2.light = bumper3.light = bumper4.light = bumper5.light = bumper6.light = App->textures->Load("pinball/bumper_light.png");
 	bumper1.idle = bumper2.idle = bumper3.idle = bumper4.idle = bumper5.idle = bumper6.idle = App->textures->Load("pinball/bumper_idle.png");
+
+	bumper1.fx = bumper2.fx = bumper3.fx = bumper4.fx = bumper5.fx = bumper6.fx = App->audio->LoadFx("pinball/Sounds/bumper.ogg");
 
 	int background[58] = {
 		59, 314,
@@ -228,12 +226,25 @@ void ModuleSceneIntro::CreateMap()
 	};
 	App->physics->CreateChain(0, 0, bar_up_r, 12, b2_staticBody);
 
-	bumper1.body = App->physics->CreateCircle(291, 195, 16, b2_staticBody, true);
+	bumper1.body = App->physics->CreateCircle(291, 195, 16, b2_staticBody);
+	bumper1.body->listener = this;
 	bumper2.body = App->physics->CreateCircle(139, 267, 16, b2_staticBody);
+	bumper2.body->listener = this;
 	bumper3.body = App->physics->CreateCircle(230, 267, 16, b2_staticBody);
+	bumper3.body->listener = this;
 	bumper4.body = App->physics->CreateCircle(230, 133, 16, b2_staticBody);
+	bumper4.body->listener = this;
 	bumper5.body = App->physics->CreateCircle(139, 133, 16, b2_staticBody);
+	bumper5.body->listener = this;
 	bumper6.body = App->physics->CreateCircle(77, 195, 16, b2_staticBody);
+	bumper6.body->listener = this;
+
+	bump_list.add(&bumper1);
+	bump_list.add(&bumper2);
+	bump_list.add(&bumper3);
+	bump_list.add(&bumper4);
+	bump_list.add(&bumper5);
+	bump_list.add(&bumper6);
 
 	
 }
@@ -242,8 +253,18 @@ void ModuleSceneIntro::CreateMap()
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	
-	if (bodyA == bumper1.body)
+	p2List_item<Bumper*>* item;
+	item = bump_list.getFirst();
+
+	while (item != NULL)
 	{
-		bumper1.life = 1000;
+		if (item->data->body == bodyA)
+		{
+			item->data->life = LIGHT_LIFE;
+			App->audio->PlayFx(item->data->fx);
+			return;
+		}
+		item = item->next;
 	}
+
 }
