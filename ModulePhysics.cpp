@@ -404,7 +404,7 @@ void ModulePhysics::CreatePrismaticJoint(PhysBody* body_a, PhysBody* body_b, int
 
 //Contact functions-----------------------------------------------------------------------------------------------------------------
 
-void ModulePhysics::BeginContact(b2Contact* contact)
+void ModulePhysics::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 {
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();

@@ -4,6 +4,18 @@
 #include "p2Point.h"
 #include "Globals.h"
 
+struct Bumper
+{
+	PhysBody* body;
+	SDL_Texture* idle;
+	SDL_Texture* light;
+	uint life;
+	uint fx;
+
+	Bumper() : body(NULL), idle(NULL), light(NULL)
+	{};
+};
+
 class PhysBody;
 
 class ModuleSceneIntro : public Module
@@ -14,13 +26,15 @@ public:
 
 	bool Start();
 	update_status Update();
+	void Draw();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
+private:
+	void CreateMap();
+
 public:
 	p2List<PhysBody*> circles;
-
-	p2List<PhysBody*> background_items;
 
 	PhysBody* sensor;
 	bool sensed;
@@ -31,7 +45,12 @@ public:
 	bool ray_on;
 
 	SDL_Texture* background;
-	
-private:
-	void CreateMap();
+
+	Bumper bumper1; //Start left up and rotate clockwise
+	Bumper bumper2;
+	Bumper bumper3;
+	Bumper bumper4;
+	Bumper bumper5;
+	Bumper bumper6;
+
 };

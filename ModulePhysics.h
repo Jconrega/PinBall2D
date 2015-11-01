@@ -56,7 +56,7 @@ public:
 	void CreatePrismaticJoint(PhysBody* body_a, PhysBody* body_b, int anchor_x_a, int anchor_y_a, int anchor_x_b, int anchor_y_b, int limit_low, int limit_up);
 
 	// b2ContactListener ---
-	void BeginContact(b2Contact* contact);
+	void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
 
 private:
 

@@ -49,9 +49,42 @@ update_status ModuleSceneIntro::Update()
 		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(),7, b2_dynamicBody));
 	}
 
+	Draw();
+
+	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneIntro::Draw()
+{
+	int x, y;
+
 	App->renderer->Blit(background, 0, 0);
 
-	// All draw functions ------------------------------------------------------
+	bumper1.body->GetPosition(x, y);
+	if (bumper1.life > 0)
+	{
+		bumper1.life--;
+		App->renderer->Blit(bumper1.light, x, y);
+	}
+	else
+	App->renderer->Blit(bumper1.idle, x, y);
+
+	bumper2.body->GetPosition(x, y);
+	App->renderer->Blit(bumper2.idle, x, y);
+
+	bumper3.body->GetPosition(x, y);
+	App->renderer->Blit(bumper3.idle, x, y);
+
+	bumper4.body->GetPosition(x, y);
+	App->renderer->Blit(bumper4.idle, x, y);
+
+	bumper5.body->GetPosition(x, y);
+	App->renderer->Blit(bumper5.idle, x, y);
+
+	bumper6.body->GetPosition(x, y);
+	App->renderer->Blit(bumper6.idle, x, y);
+
+	//Draw all circles (DEBUG)
 	p2List_item<PhysBody*>* c = circles.getFirst();
 
 	while (c != NULL)
@@ -61,17 +94,12 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		c = c->next;
 	}
-
-
-
-	//------------------------------------------------------
-	
-
-	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::CreateMap()
 {
+	bumper1.light = bumper2.light = bumper3.light = bumper4.light = bumper5.light = bumper6.light = App->textures->Load("pinball/bumper_light.png");
+	bumper1.idle = bumper2.idle = bumper3.idle = bumper4.idle = bumper5.idle = bumper6.idle = App->textures->Load("pinball/bumper_idle.png");
 
 	int background[58] = {
 		59, 314,
@@ -105,21 +133,21 @@ void ModuleSceneIntro::CreateMap()
 		58, 382
 	};
 
-	background_items.add(App->physics->CreateChain(0, 0, background, 58, b2_staticBody));
+	App->physics->CreateChain(0, 0, background, 58, b2_staticBody);
 
 	int metal_l[6] = {
 		42, 541,
 		41, 574,
 		124, 574
 	};
-	background_items.add(App->physics->CreateChain(0, 0, metal_l, 6, b2_staticBody));
+	App->physics->CreateChain(0, 0, metal_l, 6, b2_staticBody);
 
 	int metal_r[6] = {
 		321, 573,
 		320, 540,
 		241, 574
 	};
-	background_items.add(App->physics->CreateChain(0, 0, metal_r, 6, b2_staticBody));
+	App->physics->CreateChain(0, 0, metal_r, 6, b2_staticBody);
 
 	int wall_l[12] = {
 		40, 440,
@@ -129,7 +157,7 @@ void ModuleSceneIntro::CreateMap()
 		48, 501,
 		48, 439
 	};
-	background_items.add(App->physics->CreateChain(0, 0, wall_l, 12, b2_staticBody));
+	App->physics->CreateChain(0, 0, wall_l, 12, b2_staticBody);
 
 	int wall_r[18] = {
 		322, 502,
@@ -142,7 +170,7 @@ void ModuleSceneIntro::CreateMap()
 		328, 440,
 		322, 442
 	};
-	background_items.add(App->physics->CreateChain(0, 0, wall_r, 18, b2_staticBody));
+	App->physics->CreateChain(0, 0, wall_r, 18, b2_staticBody);
 
 	int triangle_l[10] = {
 		106, 508,
@@ -151,14 +179,14 @@ void ModuleSceneIntro::CreateMap()
 		77, 436,
 		114, 499
 	};
-	background_items.add(App->physics->CreateChain(0, 0, triangle_l, 10, b2_staticBody));
+	App->physics->CreateChain(0, 0, triangle_l, 10, b2_staticBody);
 
 	int triangle_r[6] = {
 		262, 502,
 		300, 487,
 		293, 447
 	};
-	background_items.add(App->physics->CreateChain(0, 0, triangle_r, 6, b2_staticBody));
+	App->physics->CreateChain(0, 0, triangle_r, 6, b2_staticBody);
 
 	int bar_down_l[12] = {
 		68, 122,
@@ -168,7 +196,7 @@ void ModuleSceneIntro::CreateMap()
 		82, 121,
 		75, 127
 	};
-	background_items.add(App->physics->CreateChain(0, 0, bar_down_l, 12, b2_staticBody));
+	App->physics->CreateChain(0, 0, bar_down_l, 12, b2_staticBody);
 
 	int bar_down_r[12] = {
 		287, 94,
@@ -178,7 +206,7 @@ void ModuleSceneIntro::CreateMap()
 		300, 93,
 		293, 87
 	};
-	background_items.add(App->physics->CreateChain(0, 0, bar_down_r, 12, b2_staticBody));
+	App->physics->CreateChain(0, 0, bar_down_r, 12, b2_staticBody);
 
 	int bar_up_l[12] = {
 		101, 67,
@@ -188,7 +216,7 @@ void ModuleSceneIntro::CreateMap()
 		108, 99,
 		101, 93
 	};
-	background_items.add(App->physics->CreateChain(0, 0, bar_up_l, 12, b2_staticBody));
+	App->physics->CreateChain(0, 0, bar_up_l, 12, b2_staticBody);
 
 	int bar_up_r[12] = {
 		261, 100,
@@ -198,14 +226,14 @@ void ModuleSceneIntro::CreateMap()
 		254, 69,
 		254, 95
 	};
-	background_items.add(App->physics->CreateChain(0, 0, bar_up_r, 12, b2_staticBody));
+	App->physics->CreateChain(0, 0, bar_up_r, 12, b2_staticBody);
 
-	background_items.add(App->physics->CreateCircle(291, 195, 17, b2_staticBody));
-	background_items.add(App->physics->CreateCircle(139, 267, 17, b2_staticBody));
-	background_items.add(App->physics->CreateCircle(230, 267, 17, b2_staticBody));
-	background_items.add(App->physics->CreateCircle(230, 133, 17, b2_staticBody));
-	background_items.add(App->physics->CreateCircle(139, 133, 17, b2_staticBody));
-	background_items.add(App->physics->CreateCircle(77, 195, 17, b2_staticBody));
+	bumper1.body = App->physics->CreateCircle(291, 195, 16, b2_staticBody);
+	bumper2.body = App->physics->CreateCircle(139, 267, 16, b2_staticBody);
+	bumper3.body = App->physics->CreateCircle(230, 267, 16, b2_staticBody);
+	bumper4.body = App->physics->CreateCircle(230, 133, 16, b2_staticBody);
+	bumper5.body = App->physics->CreateCircle(139, 133, 16, b2_staticBody);
+	bumper6.body = App->physics->CreateCircle(77, 195, 16, b2_staticBody);
 
 	
 }
@@ -213,20 +241,9 @@ void ModuleSceneIntro::CreateMap()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	int x, y;
-
-	App->audio->PlayFx(bonus_fx);
-
-	/*
-	if(bodyA)
+	
+	if (bodyA == bumper1.body)
 	{
-		bodyA->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
+		bumper1.life = 1000;
 	}
-
-	if(bodyB)
-	{
-		bodyB->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}*/
 }
