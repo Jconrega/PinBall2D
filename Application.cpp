@@ -33,12 +33,13 @@ Application::Application()
 	AddModule(textures);
 	AddModule(input);
 	AddModule(audio);
-	
+	// Player
+	AddModule(player);
 	// Scenes
 	AddModule(scene_intro);
 	
 	// Player
-	AddModule(player);
+	//AddModule(player);
 }
 
 Application::~Application()

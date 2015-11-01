@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModulePlayer.h"
+#include "ModuleRender.h"
+#include "ModuleTextures.h"
 #include "ModuleInput.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -25,16 +27,18 @@ bool ModulePlayer::Start()
 bool ModulePlayer::CleanUp()
 {
 	LOG("Unloading player");
-
+	
 	return true;
 }
 
 // Update: draw background
 update_status ModulePlayer::Update()
 {
+	App->renderer->Blit(ball_texture, ball->body->GetPosition().x, ball->body->GetPosition().y , NULL, 1.0f, ball->GetRotation());
+
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
-		
+		RespawnBall();
 	}
 	return UPDATE_CONTINUE;
 }
