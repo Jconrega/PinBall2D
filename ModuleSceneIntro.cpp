@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
+#include "ModulePlayer.h"
 #include "ModulePhysics.h"
 
 #define LIGHT_LIFE 10
@@ -277,6 +278,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		{
 			item->data->life = LIGHT_LIFE;
 			App->audio->PlayFx(bump_fx);
+			//App->player->score += 10; TODO: ADD score
 			return;
 		}
 		item = item->next;

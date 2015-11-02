@@ -32,7 +32,7 @@ public:
 private:
 	
 	void CreateMap();
-
+	void DrawScore();
 	void RespawnBall();
 
 public:
@@ -46,4 +46,8 @@ public:
 	Entity flipper_right;
 	Entity flipper_left; 
 	Entity plunger;
+
+	//Score
+	SDL_Texture* numbers;
+	int score;
 };
