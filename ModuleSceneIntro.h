@@ -4,19 +4,19 @@
 #include "p2Point.h"
 #include "Globals.h"
 
+class PhysBody;
+
 struct Bumper
 {
 	PhysBody* body;
-	SDL_Texture* idle;
-	SDL_Texture* light;
 	uint life;
-	uint fx;
 
-	Bumper() : body(NULL), idle(NULL), light(NULL)
-	{};
+	Bumper() : body(NULL)
+	{}
+
+	Bumper(PhysBody* _body, uint _life = 0) : body(_body), life(_life)
+	{}
 };
-
-class PhysBody;
 
 class ModuleSceneIntro : public Module
 {
@@ -32,6 +32,8 @@ public:
 
 private:
 	void CreateMap();
+	
+	Bumper* CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening = false, Module* _module = NULL, uint _life = 0);
 
 public:
 	p2List<PhysBody*> circles;
@@ -46,13 +48,16 @@ public:
 
 	SDL_Texture* background;
 
-	p2List<Bumper*> bump_list;
+	p2List<Bumper*>	bump_list;
+	SDL_Texture*	bump_idle;
+	SDL_Texture*	bump_light;
+	uint			bump_fx;
 
-	Bumper bumper1; //Start left up and rotate clockwise
-	Bumper bumper2;
-	Bumper bumper3;
-	Bumper bumper4;
-	Bumper bumper5;
-	Bumper bumper6;
+	p2List<Bumper*> bar_list;
+	SDL_Texture*	bar_idle;
+	SDL_Texture*	bar_light;
+
+
+	
 
 };
