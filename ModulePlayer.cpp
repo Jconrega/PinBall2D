@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include "p2DynArray.h"
 #include "Application.h"
 #include "ModulePlayer.h"
 #include "ModulePhysics.h"
@@ -22,6 +23,9 @@ ModulePlayer::~ModulePlayer()
 bool ModulePlayer::Start()
 {
 	LOG("Loading player");
+
+	score = 0;
+	numbers = App->textures->Load("pinball/numbers.png");
 
 	CreateMap();
 
@@ -69,10 +73,9 @@ update_status ModulePlayer::Update()
 	{
 		App->renderer->Blit(ball_lives, 510 - (20 * i), 127);
 	}
-	
 
 	Draw();
-
+	DrawScore();
 	
 	return UPDATE_CONTINUE;
 }
@@ -92,6 +95,7 @@ void ModulePlayer::Draw()
 
 	plunger.body->GetPosition(x, y);
 	App->renderer->Blit(plunger.texture, x, y, NULL, 1.0F, plunger.body->GetRotation(), 0, 0);
+
 }
 
 void ModulePlayer::CreateMap()
@@ -150,5 +154,35 @@ void ModulePlayer::RespawnBall()
 		lives--;
 }
 
+void ModulePlayer::DrawScore()
+{
+	SDL_Rect rect;
+	rect.w = 15;
+	rect.h = 20;
+	rect.y = 0;
 
+	//Put the score in an array to identify each number
+	p2DynArray<int> arr;
+	int num = score;
+	while (num > 0)
+	{
+		int result = num % 10;
+		arr.PushBack(result);
+		num = num / 10;
+	}
+
+	//Draw a number of 10 digits
+	for (int i = 0; i < 9; i++)
+	{
+		//Pick the number or fill it with 0
+		if (arr.Count() > i)
+			rect.x = arr[i] * 15;
+		else
+			rect.x = 0;
+
+		App->renderer->Blit(numbers, 545-i* 15, 59, &rect, 1.0f, 0, 0, 0);
+	}
+	
+	
+}
 
