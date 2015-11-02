@@ -28,6 +28,7 @@ public:
 	update_status Update();
 	void Draw();
 	bool CleanUp();
+	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
 private:
 	
@@ -47,6 +48,10 @@ public:
 	Entity flipper_right;
 	Entity flipper_left; 
 	Entity plunger;
+
+	Entity barrier;
+	PhysBody* turn_off_barrier;
+	PhysBody* turn_on_barrier;
 
 	//Score
 	SDL_Texture* numbers;
