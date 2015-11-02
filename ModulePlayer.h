@@ -39,9 +39,10 @@ public:
 	
 	Entity ball;
 	iPoint ball_respawn;
-	int lives;
+	int lifes;
 
-	SDL_Texture* ball_lives;
+	SDL_Texture* ball_lifes;
+	SDL_Texture* plunger_top; //Just for a visual effect
 
 	Entity flipper_right;
 	Entity flipper_left; 
