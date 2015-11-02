@@ -205,45 +205,21 @@ void ModuleSceneIntro::CreateMap()
 	};
 	App->physics->CreateChain(0, 0, triangle_r, 6, b2_staticBody);
 
-	int bar_down_l[12] = {
-		68, 122,
-		68, 94,
-		75, 88,
-		82, 94,
-		82, 121,
-		75, 127
+	int bar[16] = {
+		0, 7,
+		4, 1,
+		9, 1,
+		14, 7,
+		14, 33,
+		10, 37,
+		4, 37,
+		0, 32
 	};
-	CreateBumper(App->physics->CreateChain(0, 0, bar_down_l, 12, b2_staticBody), &bar_list, true, this);
 
-	int bar_down_r[12] = {
-		287, 94,
-		287, 121,
-		292, 126,
-		299, 120,
-		300, 93,
-		293, 87
-	};
-	CreateBumper(App->physics->CreateChain(0, 0, bar_down_r, 12, b2_staticBody), &bar_list, true, this);
-
-	int bar_up_l[12] = {
-		101, 67,
-		109, 61,
-		115, 66,
-		115, 93,
-		108, 99,
-		101, 93
-	};
-	CreateBumper(App->physics->CreateChain(0, 0, bar_up_l, 12, b2_staticBody), &bar_list, true, this);
-
-	int bar_up_r[12] = {
-		261, 100,
-		267, 93,
-		267, 67,
-		259, 61,
-		254, 69,
-		254, 95
-	};
-	CreateBumper(App->physics->CreateChain(0, 0, bar_up_r, 12, b2_staticBody), &bar_list, true, this);
+	CreateBumper(App->physics->CreateChain(68, 89, bar, 16, b2_staticBody), &bar_list, true, this);
+	CreateBumper(App->physics->CreateChain(101, 62, bar, 16, b2_staticBody), &bar_list, true, this);
+	CreateBumper(App->physics->CreateChain(254, 62, bar, 16, b2_staticBody), &bar_list, true, this);
+	CreateBumper(App->physics->CreateChain(286, 89, bar, 16, b2_staticBody), &bar_list, true, this);
 
 	CreateBumper(App->physics->CreateCircle(291, 195, 16, b2_staticBody), &bump_list, true, this);
 	CreateBumper(App->physics->CreateCircle(139, 267, 16, b2_staticBody), &bump_list, true, this);
