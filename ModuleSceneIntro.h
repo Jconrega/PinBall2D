@@ -47,6 +47,7 @@ public:
 	SDL_Texture* background;
 
 	p2List<Bumper*> bump_list;
+	p2List<Bumper*> sensor_list;
 
 	Bumper bumper1; //Start left up and rotate clockwise
 	Bumper bumper2;
@@ -56,5 +57,17 @@ public:
 	Bumper bumper6;
 
 	Bumper light_cercle1;
+	Bumper light_cercle2;
+	Bumper light_cercle3;
+	Bumper light_cercle4;
+	Bumper light_cercle5;
+	Bumper light_cercle6;
+	Bumper light_cercle7;
+	Bumper light_cercle8;
+	Bumper light_cercle9;
+	Bumper light_cercle10;
+	Bumper light_cercle11;
+	Bumper light_cercle12;
+	 
 
 };

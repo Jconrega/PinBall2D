@@ -78,6 +78,24 @@ void ModuleSceneIntro::Draw()
 			App->renderer->Blit(item->data->idle, x, y);
 		item = item->next;
 	}
+	//Draw all sensors
+	p2List_item<Bumper*>* item_sensor;
+	item_sensor = sensor_list.getFirst();
+
+	while (item_sensor != NULL)
+	{
+		item_sensor->data->body->GetPosition(x, y);
+		if (item_sensor->data->life > 0)
+		{
+			item_sensor->data->life--;
+			App->renderer->Blit(item_sensor->data->light, x, y);
+		}
+		else
+			App->renderer->Blit(item_sensor->data->idle, x, y);
+		item_sensor = item_sensor->next;
+		
+		
+	}
 
 
 	//Draw all circles (DEBUG)
@@ -99,8 +117,8 @@ void ModuleSceneIntro::CreateMap()
 
 	bumper1.fx = bumper2.fx = bumper3.fx = bumper4.fx = bumper5.fx = bumper6.fx = App->audio->LoadFx("pinball/Sounds/bumper.ogg");
 
-	light_cercle1.idle = App->textures->Load("pinball/circle_idle.png");
-	light_cercle1.light = App->textures->Load("pinball/circle_idle.png");
+	light_cercle1.idle = light_cercle2.idle = light_cercle3.idle = light_cercle4.idle = light_cercle5.idle = light_cercle6.idle = light_cercle7.idle = light_cercle8.idle = light_cercle9.idle = light_cercle10.idle = light_cercle11.idle = light_cercle12.idle = App->textures->Load("pinball/circle_idle.png");
+	light_cercle1.light = light_cercle2.light = light_cercle3.light = light_cercle4.light = light_cercle5.light = light_cercle6.light = light_cercle7.light = light_cercle8.light = light_cercle9.light = light_cercle10.light = light_cercle11.light = light_cercle12.light = App->textures->Load("pinball/circle_idle.png");
 
 	int background[58] = {
 		59, 314,
@@ -249,8 +267,43 @@ void ModuleSceneIntro::CreateMap()
 	bump_list.add(&bumper5);
 	bump_list.add(&bumper6);
 
-	light_cercle1.body = App->physics->CreateCircle(277, 62, 7, b2_staticBody, true);
+	light_cercle1.body = App->physics->CreateCircle(184, 165, 7, b2_staticBody, true);
 	light_cercle1.body->listener = this;
+	light_cercle2.body = App->physics->CreateCircle(89, 61, 7, b2_staticBody, true);
+	light_cercle2.body->listener = this;
+	light_cercle3.body = App->physics->CreateCircle(123, 39, 7, b2_staticBody, true);
+	light_cercle3.body->listener = this;
+	light_cercle4.body = App->physics->CreateCircle(277, 62, 7, b2_staticBody, true);
+	light_cercle4.body->listener = this;
+	light_cercle5.body = App->physics->CreateCircle(185, 232, 7, b2_staticBody, true);
+	light_cercle5.body->listener = this;
+	light_cercle6.body = App->physics->CreateCircle(75, 327, 7, b2_staticBody, true);
+	light_cercle6.body->listener = this;
+	light_cercle7.body = App->physics->CreateCircle(75, 349, 7, b2_staticBody, true);
+	light_cercle7.body->listener = this;
+	light_cercle8.body = App->physics->CreateCircle(75, 370, 7, b2_staticBody, true);
+	light_cercle8.body->listener = this;
+	light_cercle9.body = App->physics->CreateCircle(301, 327, 7, b2_staticBody, true);
+	light_cercle9.body->listener = this;
+	light_cercle10.body = App->physics->CreateCircle(301, 370, 7, b2_staticBody, true);
+	light_cercle10.body->listener = this;
+	light_cercle11.body = App->physics->CreateCircle(301, 349, 7, b2_staticBody, true);
+	light_cercle11.body->listener = this;
+	light_cercle12.body = App->physics->CreateCircle(277, 62, 7, b2_staticBody, true);
+	light_cercle12.body->listener = this;
+
+	sensor_list.add(&light_cercle1);
+	sensor_list.add(&light_cercle2);
+	sensor_list.add(&light_cercle3);
+	sensor_list.add(&light_cercle4);
+	sensor_list.add(&light_cercle5);
+	sensor_list.add(&light_cercle6);
+	sensor_list.add(&light_cercle7);
+	sensor_list.add(&light_cercle8);
+	sensor_list.add(&light_cercle9);
+	sensor_list.add(&light_cercle10);
+	sensor_list.add(&light_cercle11);
+	sensor_list.add(&light_cercle12);
 	
 }
 
