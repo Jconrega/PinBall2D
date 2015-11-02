@@ -55,4 +55,6 @@ public:
 	Bumper bumper5;
 	Bumper bumper6;
 
+	Bumper light_cercle1;
+
 };

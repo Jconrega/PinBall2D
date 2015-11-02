@@ -99,6 +99,9 @@ void ModuleSceneIntro::CreateMap()
 
 	bumper1.fx = bumper2.fx = bumper3.fx = bumper4.fx = bumper5.fx = bumper6.fx = App->audio->LoadFx("pinball/Sounds/bumper.ogg");
 
+	light_cercle1.idle = App->textures->Load("pinball/circle_idle.png");
+	light_cercle1.light = App->textures->Load("pinball/circle_idle.png");
+
 	int background[58] = {
 		59, 314,
 		26, 274,
@@ -246,6 +249,8 @@ void ModuleSceneIntro::CreateMap()
 	bump_list.add(&bumper5);
 	bump_list.add(&bumper6);
 
+	light_cercle1.body = App->physics->CreateCircle(277, 62, 7, b2_staticBody, true);
+	light_cercle1.body->listener = this;
 	
 }
 
@@ -266,5 +271,4 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		}
 		item = item->next;
 	}
-
 }
