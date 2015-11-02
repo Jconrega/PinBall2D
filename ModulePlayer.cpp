@@ -7,13 +7,15 @@
 #include "ModuleRender.h"
 #include "ModuleInput.h"
 
-#define MAX_LIVES 5
+#define MAX_LIFES 5
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	ball_respawn.x = 367;
-	ball_respawn.y = 470;
-	lives = MAX_LIVES;
+	ball_respawn.y = 493;
+	lifes = MAX_LIFES;
+
+	turn_on_barrier = turn_off_barrier = NULL;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -25,6 +27,7 @@ bool ModulePlayer::Start()
 	LOG("Loading player");
 
 	score = 0;
+
 	numbers = App->textures->Load("pinball/numbers.png");
 
 	CreateMap();
@@ -60,18 +63,20 @@ update_status ModulePlayer::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
 	{
-		plunger.body->Force(0, -600, 0, 0);
+		plunger.body->Force(0, -500, 0, 0);
 	}
 	else
 	{
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) != KEY_DOWN && App->input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT)
 		{
-			plunger.body->Force(0, -400, 0, 0);
+			plunger.body->body->SetGravityScale(-1);
 		}
+		else
+			plunger.body->body->SetGravityScale(1);
 	}
-	for (int i = 0; i < lives; i++)
+	for (int i = 0; i < lifes; i++)
 	{
-		App->renderer->Blit(ball_lives, 510 - (20 * i), 127);
+		App->renderer->Blit(ball_lifes, 510 - (20 * i), 127);
 	}
 
 	Draw();
@@ -96,6 +101,11 @@ void ModulePlayer::Draw()
 	plunger.body->GetPosition(x, y);
 	App->renderer->Blit(plunger.texture, x, y, NULL, 1.0F, plunger.body->GetRotation(), 0, 0);
 
+	App->renderer->Blit(plunger_top, 359, 500);
+	
+	barrier.body->GetPosition(x, y);
+	App->renderer->Blit(barrier.texture, x, y, NULL, 1.0F, barrier.body->GetRotation(), 0, 0);
+
 }
 
 void ModulePlayer::CreateMap()
@@ -105,11 +115,14 @@ void ModulePlayer::CreateMap()
 	flipper_right.texture = App->textures->Load("pinball/flipper_right.png");
 	flipper_left.texture = App->textures->Load("pinball/flipper_left.png");
 	plunger.texture = App->textures->Load("pinball/plunger.png");
-	ball_lives = ball.texture;
+	plunger_top = App->textures->Load("pinball/plunger_top.png");
+	ball_lifes = ball.texture;
+	barrier.texture = App->textures->Load("pinball/barrier.png");
 	//TODO: Create all bodies here
 
-	ball.body = App->physics->CreateCircle(367, 470, 7, b2_dynamicBody);
+	ball.body = App->physics->CreateCircle(367, 493, 7, b2_dynamicBody);
 	ball.body->listener = this;
+	ball.body->body->SetBullet(true);
 
 	int flipper_r[12] = {
 		1, 7,
@@ -137,21 +150,38 @@ void ModulePlayer::CreateMap()
 	flipper_left.anchor = App->physics->CreateCircle(121, 544, 2, b2_staticBody);
 	App->physics->CreateRevoluteJoint(flipper_left.body, flipper_left.anchor, 9, 11, 0, 0, -20, 20);
 
-	plunger.body = App->physics->CreateRectangle(366, 600, 14, 77, b2_dynamicBody);
+	plunger.body = App->physics->CreateRectangle(366, 539, 14, 78, b2_dynamicBody);
 	plunger.anchor = App->physics->CreateRectangle(355, 507, 5, 5, b2_staticBody);
 	App->physics->CreatePrismaticJoint(plunger.body, plunger.anchor, 0, 0, 12, 0, -80, -40);
+
+	//Barrier
+	turn_on_barrier = App->physics->CreateRectangleSensor(365,224,18,23);
+	turn_on_barrier->listener = this;
+	turn_off_barrier = App->physics->CreateRectangleSensor(368, 480, 15, 74);
+	turn_off_barrier->listener = this;
+
+	int _barrier[8] = {
+		0, 20,
+		4, 23,
+		21, 5,
+		16, 1
+	};
+	barrier.body = App->physics->CreatePolygon(-30, 258, 0, 0, _barrier, 8, b2_staticBody);
 
 }
 
 void ModulePlayer::RespawnBall()
 {
 	b2Vec2 position(PIXEL_TO_METERS(ball_respawn.x), PIXEL_TO_METERS(ball_respawn.y));
-	ball.body->body->SetTransform(position, ball.body->GetRotation());
+	ball.body->body->SetTransform(position, 0);
 
-	if (lives-1 < 0)
-		lives = MAX_LIVES;
+	if (lifes - 1 < 0)
+	{
+		lifes = MAX_LIFES;
+		score = 0;
+	}
 	else
-		lives--;
+		lifes--;
 }
 
 void ModulePlayer::DrawScore()
@@ -184,5 +214,22 @@ void ModulePlayer::DrawScore()
 	}
 	
 	
+}
+
+void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
+{
+	if (bodyA == turn_off_barrier)
+	{
+		b2Vec2 pos(PIXEL_TO_METERS(-358), PIXEL_TO_METERS(258));
+		barrier.body->body->SetTransform(pos, barrier.body->GetRotation());
+		return;
+	}
+
+	if (bodyA == turn_on_barrier)
+	{
+		b2Vec2 pos(PIXEL_TO_METERS(358), PIXEL_TO_METERS(258));
+		barrier.body->body->SetTransform(pos, barrier.body->GetRotation());
+		return;
+	}
 }
 
