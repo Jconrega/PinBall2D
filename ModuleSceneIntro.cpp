@@ -91,8 +91,12 @@ void ModuleSceneIntro::Draw()
 			App->renderer->Blit(item_sensor->data->light, x, y);
 		}
 		else
+		{
 			App->renderer->Blit(item_sensor->data->idle, x, y);
-		item_sensor = item_sensor->next;
+			item_sensor = item_sensor->next;
+		}
+			
+		
 		
 		
 	}
@@ -267,7 +271,7 @@ void ModuleSceneIntro::CreateMap()
 	bump_list.add(&bumper5);
 	bump_list.add(&bumper6);
 
-	light_cercle1.body = App->physics->CreateCircle(184, 165, 7, b2_staticBody, true);
+	light_cercle1.body = App->physics->CreateCircle(183, 166, 7, b2_staticBody, true);
 	light_cercle1.body->listener = this;
 	light_cercle2.body = App->physics->CreateCircle(89, 61, 7, b2_staticBody, true);
 	light_cercle2.body->listener = this;
@@ -289,7 +293,7 @@ void ModuleSceneIntro::CreateMap()
 	light_cercle10.body->listener = this;
 	light_cercle11.body = App->physics->CreateCircle(301, 349, 7, b2_staticBody, true);
 	light_cercle11.body->listener = this;
-	light_cercle12.body = App->physics->CreateCircle(277, 62, 7, b2_staticBody, true);
+	light_cercle12.body = App->physics->CreateCircle(244, 38, 7, b2_staticBody, true);
 	light_cercle12.body->listener = this;
 
 	sensor_list.add(&light_cercle1);
