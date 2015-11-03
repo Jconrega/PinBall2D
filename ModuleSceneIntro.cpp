@@ -8,7 +8,7 @@
 #include "ModulePlayer.h"
 #include "ModulePhysics.h"
 
-#define LIGHT_LIFE 500
+#define LIGHT_LIFE 250
 #define BUMP_CIRCLE_SCORE 100
 #define BUMP_BAR_SCORE 500
 #define BUMP_TRIANGLE_SCORE 250
@@ -85,7 +85,7 @@ void ModuleSceneIntro::Draw()
 		DrawBumper(*item2->data, bar_idle, bar_light);
 		item2 = item2->next;
 	}
-
+	//sensors
 	p2List_item<Bumper*>* item_sensor;
 	item_sensor = sensor_list.getFirst();
 
@@ -139,7 +139,7 @@ void ModuleSceneIntro::CreateMap()
 
 	bar_light = App->textures->Load("pinball/bar_light.png");
 	bar_idle = App->textures->Load("pinball/bar_idle.png");
-
+	//sensors
 	sensor_idle = App->textures->Load("pinball/circle_idle.png");
 	sensor_light = App->textures->Load("pinball/circle_light.png");
 
@@ -273,7 +273,7 @@ void ModuleSceneIntro::CreateMap()
 	CreateBumper(App->physics->CreateCircle(230, 133, 16, b2_staticBody), &bump_list, true, this);
 	CreateBumper(App->physics->CreateCircle(139, 133, 16, b2_staticBody), &bump_list, true, this);
 	CreateBumper(App->physics->CreateCircle(77, 195, 16, b2_staticBody),  &bump_list, true, this);
-
+	//sensors
 	CreateBumper(App->physics->CreateCircle(183, 166, 7, b2_staticBody, true), &sensor_list, true, this);
 	CreateBumper(App->physics->CreateCircle(89, 61, 7, b2_staticBody, true), &sensor_list, true, this);
 	CreateBumper(App->physics->CreateCircle(123, 39, 7, b2_staticBody, true), &sensor_list, true, this);
@@ -339,7 +339,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		item2 = item2->next;
 	}
 
-
+	//sensors
 	p2List_item<Bumper*>* item_sensor;
 	item_sensor = sensor_list.getFirst();
 
