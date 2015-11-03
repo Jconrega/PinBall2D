@@ -87,7 +87,7 @@ void ModuleSceneIntro::Draw()
 	while (item_sensor != NULL)
 	{
 		item_sensor->data->body->GetPosition(x, y);
-		if (item_sensor->data->life > 0)
+		if (item_sensor->data->sensor == true)
 		{
 			item_sensor->data->life--;
 			App->renderer->Blit(sensor_light, x, y);
@@ -317,6 +317,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		if (item_sensor->data->body == bodyA)
 		{
 			item_sensor->data->life = LIGHT_LIFE;
+			item_sensor->data->sensor = !item_sensor->data->sensor;
 			return;
 		}
 		item_sensor = item_sensor->next;

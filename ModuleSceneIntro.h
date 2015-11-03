@@ -10,11 +10,12 @@ struct Bumper
 {
 	PhysBody* body;
 	uint life;
+	bool sensor;
 
 	Bumper() : body(NULL)
 	{}
 
-	Bumper(PhysBody* _body, uint _life = 0) : body(_body), life(_life)
+	Bumper(PhysBody* _body, uint _life = 0, bool _sensor = false) : body(_body), life(_life), sensor(_sensor)
 	{}
 };
 
