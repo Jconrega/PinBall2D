@@ -75,26 +75,6 @@ void ModuleSceneIntro::Draw()
 		DrawBumper(*item->data, bump_idle, bump_light);
 		item = item->next;
 	}
-	
-	//Draw all sensors
-	p2List_item<Bumper*>* item_sensor;
-	item_sensor = sensor_list.getFirst();
-
-	while (item_sensor != NULL)
-	{
-		item_sensor->data->body->GetPosition(x, y);
-		if (item_sensor->data->sensor == true)
-		{
-			item_sensor->data->life--;
-			App->renderer->Blit(sensor_light, x, y);
-		}
-		else
-		{
-			App->renderer->Blit(sensor_idle, x, y);
-		}
-
-		item_sensor = item_sensor->next;
-	}
 
 	p2List_item<Bumper*>* item2;
 	item2 = bar_list.getFirst();
@@ -145,15 +125,14 @@ void ModuleSceneIntro::CreateMap()
 	bar_light = App->textures->Load("pinball/bar_light.png");
 	bar_idle = App->textures->Load("pinball/bar_idle.png");
 
-<<<<<<< HEAD
 	sensor_idle = App->textures->Load("pinball/circle_idle.png");
 	sensor_light = App->textures->Load("pinball/circle_light.png");
-=======
+
 	triangle_right_idle = App->textures->Load("pinball/triangle_right_idle.png");
 	triangle_right_light = App->textures->Load("pinball/triangle_right_light.png");
 	triangle_left_light = App->textures->Load("pinball/triangle_left_light.png");
 	triangle_left_idle = App->textures->Load("pinball/triangle_left_idle.png");
->>>>>>> refs/remotes/origin/master
+
 
 	int background[58] = {
 		59, 314,
@@ -345,7 +324,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		item2 = item2->next;
 	}
 
-<<<<<<< HEAD
+
 	p2List_item<Bumper*>* item_sensor;
 	item_sensor = sensor_list.getFirst();
 
@@ -360,7 +339,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		item_sensor = item_sensor->next;
 	}
 
-=======
+
 	if (bodyA == triangle_right.body)
 	{
 		if (triangle_right.life == 0)
@@ -382,5 +361,5 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		}
 		return;
 	}
->>>>>>> refs/remotes/origin/master
+
 }
