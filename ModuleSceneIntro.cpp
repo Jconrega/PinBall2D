@@ -8,7 +8,10 @@
 #include "ModulePlayer.h"
 #include "ModulePhysics.h"
 
-#define LIGHT_LIFE 10
+#define LIGHT_LIFE 500
+#define BUMP_CIRCLE_SCORE 100
+#define BUMP_BAR_SCORE 500
+#define BUMP_TRIANGLE_SCORE 250
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -69,14 +72,7 @@ void ModuleSceneIntro::Draw()
 
 	while (item != NULL)
 	{
-		item->data->body->GetPosition(x, y);
-		if (item->data->life > 0)
-		{
-			item->data->life--;
-			App->renderer->Blit(bump_light, x, y);
-		}
-		else
-			App->renderer->Blit(bump_idle, x, y);
+		DrawBumper(*item->data, bump_idle, bump_light);
 		item = item->next;
 	}
 	
@@ -105,17 +101,12 @@ void ModuleSceneIntro::Draw()
 
 	while (item2 != NULL)
 	{
-		item2->data->body->GetPosition(x, y);
-		if (item2->data->life > 0)
-		{
-			item2->data->life--;
-			App->renderer->Blit(bar_light, x, y, NULL, 1.0f, item2->data->body->GetRotation());
-		}
-		else
-			App->renderer->Blit(bar_idle, x, y, NULL, 1.0f, item2->data->body->GetRotation());
+		DrawBumper(*item2->data, bar_idle, bar_light);
 		item2 = item2->next;
 	}
 
+	DrawBumper(triangle_left, triangle_left_idle, triangle_left_light);
+	DrawBumper(triangle_right, triangle_right_idle, triangle_right_light);
 
 	//Draw all circles (DEBUG)
 	p2List_item<PhysBody*>* c = circles.getFirst();
@@ -129,6 +120,22 @@ void ModuleSceneIntro::Draw()
 	}
 }
 
+void ModuleSceneIntro::DrawBumper(Bumper &bump, SDL_Texture* idle, SDL_Texture* light)
+{
+	int x, y;
+	bump.body->GetPosition(x, y);
+	int time = bump.life - SDL_GetTicks();
+	if (time >= 0)
+	{
+		App->renderer->Blit(light, x, y);
+	}
+	else
+	{
+		App->renderer->Blit(idle, x, y);
+		bump.life = 0;
+	}
+}
+
 void ModuleSceneIntro::CreateMap()
 {
 	bump_light = App->textures->Load("pinball/bumper_light.png");
@@ -138,8 +145,15 @@ void ModuleSceneIntro::CreateMap()
 	bar_light = App->textures->Load("pinball/bar_light.png");
 	bar_idle = App->textures->Load("pinball/bar_idle.png");
 
+<<<<<<< HEAD
 	sensor_idle = App->textures->Load("pinball/circle_idle.png");
 	sensor_light = App->textures->Load("pinball/circle_light.png");
+=======
+	triangle_right_idle = App->textures->Load("pinball/triangle_right_idle.png");
+	triangle_right_light = App->textures->Load("pinball/triangle_right_light.png");
+	triangle_left_light = App->textures->Load("pinball/triangle_left_light.png");
+	triangle_left_idle = App->textures->Load("pinball/triangle_left_idle.png");
+>>>>>>> refs/remotes/origin/master
 
 	int background[58] = {
 		59, 314,
@@ -212,21 +226,36 @@ void ModuleSceneIntro::CreateMap()
 	};
 	App->physics->CreateChain(0, 0, wall_r, 18, b2_staticBody);
 
-	int triangle_l[10] = {
-		106, 508,
-		68, 490,
-		67, 438,
-		77, 436,
-		114, 499
+	int triangle_l[20] = {
+		0, 52,
+		0, 5,
+		2, 1,
+		6, 0,
+		12, 2,
+		46, 63,
+		47, 68,
+		44, 72,
+		38, 72,
+		3, 56
 	};
-	App->physics->CreateChain(0, 0, triangle_l, 10, b2_staticBody);
 
-	int triangle_r[6] = {
-		262, 502,
-		300, 487,
-		293, 447
+	
+	triangle_left.body = App->physics->CreateChain(67, 435, triangle_l, 20, b2_staticBody);
+	triangle_left.body->listener = this;
+
+	int triangle_r[18] = {
+		2, 63,
+		36, 3,
+		40, 1,
+		45, 2,
+		48, 5,
+		48, 53,
+		11, 72,
+		5, 72,
+		1, 67
 	};
-	App->physics->CreateChain(0, 0, triangle_r, 6, b2_staticBody);
+	triangle_right.body = App->physics->CreateChain(253, 435, triangle_r, 18, b2_staticBody);
+	triangle_right.body->listener = this;
 
 	int bar[16] = {
 		0, 7,
@@ -266,7 +295,7 @@ void ModuleSceneIntro::CreateMap()
 		
 }
 
-Bumper* ModuleSceneIntro::CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening, Module* _module, uint _life)
+Bumper* ModuleSceneIntro::CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening, Module* _module, int _life)
 {
 	Bumper* bump = new Bumper(_body, _life);
 	if (isListening)
@@ -287,9 +316,12 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		if (item->data->body == bodyA)
 		{
-			item->data->life = LIGHT_LIFE;
-			App->audio->PlayFx(bump_fx);
-			//App->player->score += 10; TODO: ADD score
+			if (item->data->life == 0)
+			{
+				item->data->life = SDL_GetTicks() + LIGHT_LIFE;
+				App->audio->PlayFx(bump_fx);
+				App->player->score += BUMP_CIRCLE_SCORE;
+			}
 			return;
 		}
 		item = item->next;
@@ -302,13 +334,18 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		if (item2->data->body == bodyA)
 		{
-			item2->data->life = LIGHT_LIFE;
-			App->audio->PlayFx(bump_fx);
+			if (item2->data->life == 0)
+			{
+				item2->data->life = SDL_GetTicks() + LIGHT_LIFE;
+				App->audio->PlayFx(bump_fx);
+				App->player->score += BUMP_BAR_SCORE;
+			}
 			return;
 		}
 		item2 = item2->next;
 	}
 
+<<<<<<< HEAD
 	p2List_item<Bumper*>* item_sensor;
 	item_sensor = sensor_list.getFirst();
 
@@ -323,4 +360,27 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		item_sensor = item_sensor->next;
 	}
 
+=======
+	if (bodyA == triangle_right.body)
+	{
+		if (triangle_right.life == 0)
+		{
+			triangle_right.life = SDL_GetTicks() + LIGHT_LIFE;
+			App->audio->PlayFx(bump_fx);
+			App->player->score += BUMP_TRIANGLE_SCORE;
+		}
+		return;
+	}
+
+	if (bodyA == triangle_left.body)
+	{
+		if (triangle_left.life == 0)
+		{
+			triangle_left.life = SDL_GetTicks() + LIGHT_LIFE;
+			App->audio->PlayFx(bump_fx);
+			App->player->score += BUMP_TRIANGLE_SCORE;
+		}
+		return;
+	}
+>>>>>>> refs/remotes/origin/master
 }

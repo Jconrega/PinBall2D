@@ -9,15 +9,24 @@ class PhysBody;
 struct Bumper
 {
 	PhysBody* body;
+<<<<<<< HEAD
 	uint life;
 	bool sensor;
+=======
+	int life;
+>>>>>>> refs/remotes/origin/master
 
 	Bumper() : body(NULL)
 	{}
 
+<<<<<<< HEAD
 	Bumper(PhysBody* _body, uint _life = 0, bool _sensor = false) : body(_body), life(_life), sensor(_sensor)
+=======
+	Bumper(PhysBody* _body, int _life = 0) : body(_body), life(_life)
+>>>>>>> refs/remotes/origin/master
 	{}
 };
+
 
 class ModuleSceneIntro : public Module
 {
@@ -34,8 +43,8 @@ public:
 private:
 	void CreateMap();
 	
-	Bumper* CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening = false, Module* _module = NULL, uint _life = 0);
-
+	Bumper* CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening = false, Module* _module = NULL, int _life = 0);
+	void DrawBumper(Bumper &bump, SDL_Texture* idle, SDL_Texture* light);
 public:
 	p2List<PhysBody*> circles;
 
@@ -66,4 +75,14 @@ public:
 	SDL_Texture*	bar_idle;
 	SDL_Texture*	bar_light;
 
+<<<<<<< HEAD
+=======
+	Bumper			triangle_right;
+	SDL_Texture*	triangle_right_idle;
+	SDL_Texture*	triangle_right_light;
+	Bumper			triangle_left;
+	SDL_Texture*	triangle_left_idle;
+	SDL_Texture*	triangle_left_light;
+
+>>>>>>> refs/remotes/origin/master
 };
