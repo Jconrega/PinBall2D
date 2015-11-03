@@ -9,20 +9,15 @@ class PhysBody;
 struct Bumper
 {
 	PhysBody* body;
-	uint life;
+	int life;
 
 	Bumper() : body(NULL)
 	{}
 
-	Bumper(PhysBody* _body, uint _life = 0) : body(_body), life(_life)
+	Bumper(PhysBody* _body, int _life = 0) : body(_body), life(_life)
 	{}
 };
 
-struct IgnoreCollision
-{
-	PhysBody*	body; //Body to ignore collisions
-	uint32		time; //Time to start ignoring collisions
-};
 
 class ModuleSceneIntro : public Module
 {
@@ -39,7 +34,7 @@ public:
 private:
 	void CreateMap();
 	
-	Bumper* CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening = false, Module* _module = NULL, uint _life = 0);
+	Bumper* CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening = false, Module* _module = NULL, int _life = 0);
 	void DrawBumper(Bumper &bump, SDL_Texture* idle, SDL_Texture* light);
 public:
 	p2List<PhysBody*> circles;

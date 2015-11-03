@@ -8,7 +8,10 @@
 #include "ModulePlayer.h"
 #include "ModulePhysics.h"
 
-#define LIGHT_LIFE 10
+#define LIGHT_LIFE 500
+#define BUMP_CIRCLE_SCORE 100
+#define BUMP_BAR_SCORE 500
+#define BUMP_TRIANGLE_SCORE 250
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -101,13 +104,16 @@ void ModuleSceneIntro::DrawBumper(Bumper &bump, SDL_Texture* idle, SDL_Texture* 
 {
 	int x, y;
 	bump.body->GetPosition(x, y);
-	if (bump.life > 0)
+	int time = bump.life - SDL_GetTicks();
+	if (time >= 0)
 	{
-		bump.life--;
 		App->renderer->Blit(light, x, y);
 	}
 	else
+	{
 		App->renderer->Blit(idle, x, y);
+		bump.life = 0;
+	}
 }
 
 void ModuleSceneIntro::CreateMap()
@@ -252,7 +258,7 @@ void ModuleSceneIntro::CreateMap()
 	
 }
 
-Bumper* ModuleSceneIntro::CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening, Module* _module, uint _life)
+Bumper* ModuleSceneIntro::CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening, Module* _module, int _life)
 {
 	Bumper* bump = new Bumper(_body, _life);
 	if (isListening)
@@ -273,9 +279,12 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		if (item->data->body == bodyA)
 		{
-			item->data->life = LIGHT_LIFE;
-			App->audio->PlayFx(bump_fx);
-			//App->player->score += 10; TODO: ADD score
+			if (item->data->life == 0)
+			{
+				item->data->life = SDL_GetTicks() + LIGHT_LIFE;
+				App->audio->PlayFx(bump_fx);
+				App->player->score += BUMP_CIRCLE_SCORE;
+			}
 			return;
 		}
 		item = item->next;
@@ -289,8 +298,12 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	{
 		if (item2->data->body == bodyA)
 		{
-			item2->data->life = LIGHT_LIFE;
-			App->audio->PlayFx(bump_fx);
+			if (item2->data->life == 0)
+			{
+				item2->data->life = SDL_GetTicks() + LIGHT_LIFE;
+				App->audio->PlayFx(bump_fx);
+				App->player->score += BUMP_BAR_SCORE;
+			}
 			return;
 		}
 		item2 = item2->next;
@@ -298,15 +311,23 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	if (bodyA == triangle_right.body)
 	{
-		triangle_right.life = LIGHT_LIFE;
-		App->audio->PlayFx(bump_fx);
+		if (triangle_right.life == 0)
+		{
+			triangle_right.life = SDL_GetTicks() + LIGHT_LIFE;
+			App->audio->PlayFx(bump_fx);
+			App->player->score += BUMP_TRIANGLE_SCORE;
+		}
 		return;
 	}
 
 	if (bodyA == triangle_left.body)
 	{
-		triangle_left.life = LIGHT_LIFE;
-		App->audio->PlayFx(bump_fx);
+		if (triangle_left.life == 0)
+		{
+			triangle_left.life = SDL_GetTicks() + LIGHT_LIFE;
+			App->audio->PlayFx(bump_fx);
+			App->player->score += BUMP_TRIANGLE_SCORE;
+		}
 		return;
 	}
 }
