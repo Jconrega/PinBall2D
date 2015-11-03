@@ -12,6 +12,7 @@
 #define BUMP_CIRCLE_SCORE 100
 #define BUMP_BAR_SCORE 500
 #define BUMP_TRIANGLE_SCORE 250
+#define SENSOR_SCORE 50
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -84,6 +85,20 @@ void ModuleSceneIntro::Draw()
 		DrawBumper(*item2->data, bar_idle, bar_light);
 		item2 = item2->next;
 	}
+
+	p2List_item<Bumper*>* item_sensor;
+	item_sensor = sensor_list.getFirst();
+
+	while (item_sensor)
+	{
+		if (item_sensor->data->sensor == true)
+			DrawBumper(*item_sensor->data, sensor_light, sensor_idle);
+		else
+			DrawBumper(*item_sensor->data, sensor_idle, sensor_light);
+
+		item_sensor = item_sensor->next;
+	}
+	
 
 	DrawBumper(triangle_left, triangle_left_idle, triangle_left_light);
 	DrawBumper(triangle_right, triangle_right_idle, triangle_right_light);
@@ -334,6 +349,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		{
 			item_sensor->data->life = LIGHT_LIFE;
 			item_sensor->data->sensor = !item_sensor->data->sensor;
+			App->player->score += SENSOR_SCORE;
 			return;
 		}
 		item_sensor = item_sensor->next;
