@@ -63,6 +63,7 @@ public:
 	p2List<Bumper*> sensor_list;
 	SDL_Texture*	sensor_idle;
 	SDL_Texture*	sensor_light;
+	uint			sensor_fx;
 
 	Bumper			triangle_right;
 	SDL_Texture*	triangle_right_idle;

@@ -53,8 +53,6 @@ bool ModulePhysics::CleanUp()
 	}
 	body_list.clear();
 
-	
-
 	delete world;
 
 	return true;

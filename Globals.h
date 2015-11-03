@@ -37,3 +37,4 @@ enum update_status
 #define BUMP_BAR_SCORE 500
 #define BUMP_TRIANGLE_SCORE 250
 #define BUMP_SENSOR_SCORE 50
+#define MAX_LIFES 5

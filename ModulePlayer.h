@@ -16,6 +16,7 @@ struct Entity
 	Entity() : texture(NULL), body(NULL), anchor(NULL)
 	{}
 
+	SDL_Texture* CleanUp();
 };
 
 class ModulePlayer : public Module
@@ -52,6 +53,11 @@ public:
 	Entity barrier;
 	PhysBody* turn_off_barrier;
 	PhysBody* turn_on_barrier;
+
+	uint flipper_fx;
+	uint game_over_fx;
+	uint ball_over_fx;
+	uint plunger_fx;
 
 	//Score
 	SDL_Texture* numbers;

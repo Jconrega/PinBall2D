@@ -41,6 +41,62 @@ bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
+	//Lists
+	p2List_item<PhysBody*>* item = circles.getFirst();
+
+	while (item != NULL)
+	{
+		delete item->data;
+		item = item->next;
+	}
+
+	circles.clear();
+
+	p2List_item<Bumper*>* item2 = bump_list.getFirst();
+
+	while (item2 != NULL)
+	{
+		delete item2->data;
+		item2 = item2->next;
+	}
+
+	bump_list.clear();
+
+	p2List_item<Bumper*>* item3 = bar_list.getFirst();
+
+	while (item3 != NULL)
+	{
+		delete item3->data;
+		item3 = item3->next;
+	}
+
+	bar_list.clear();
+
+	p2List_item<Bumper*>* item4 = sensor_list.getFirst();
+
+	while (item4 != NULL)
+	{
+		delete item4->data;
+		item4 = item4->next;
+	}
+
+	sensor_list.clear();
+
+	//Texures
+	App->textures->Unload(circle);
+	App->textures->Unload(background);
+	App->textures->Unload(bump_idle);
+	App->textures->Unload(bump_light);
+	App->textures->Unload(bar_idle);
+	App->textures->Unload(bar_light);
+	App->textures->Unload(sensor_idle);
+	App->textures->Unload(sensor_light);
+	App->textures->Unload(triangle_right_idle);
+	App->textures->Unload(triangle_left_idle);
+	App->textures->Unload(triangle_right_light);
+	App->textures->Unload(triangle_left_light);
+
+
 	return true;
 }
 
@@ -144,7 +200,7 @@ void ModuleSceneIntro::CreateMap()
 {
 	bump_light = App->textures->Load("pinball/bumper_light.png");
 	bump_idle = App->textures->Load("pinball/bumper_idle.png");
-	bump_fx = App->audio->LoadFx("pinball/Sounds/bumper.ogg");
+	bump_fx = App->audio->LoadFx("pinball/bumper.ogg");
 
 	bar_light = App->textures->Load("pinball/bar_light.png");
 	bar_idle = App->textures->Load("pinball/bar_idle.png");
@@ -156,6 +212,7 @@ void ModuleSceneIntro::CreateMap()
 
 	sensor_light = App->textures->Load("pinball/sensor_light.png");
 	sensor_idle = App->textures->Load("pinball/sensor_idle.png");
+	sensor_fx = App->audio->LoadFx("pinball/bonus.ogg");
 
 	int background[58] = {
 		59, 314,
@@ -378,7 +435,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			{
 				item3->data->life = SDL_GetTicks() + LIGHT_LIFE;
 				item3->data->sensor = !item3->data->sensor;
-				App->audio->PlayFx(bump_fx);
+				App->audio->PlayFx(sensor_fx);
 				App->player->score += BUMP_SENSOR_SCORE;
 			}
 			return;
