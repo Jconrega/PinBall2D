@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
+#include "ModulePlayer.h"
 #include "ModulePhysics.h"
 
 #define LIGHT_LIFE 10
@@ -72,10 +73,10 @@ void ModuleSceneIntro::Draw()
 		if (item->data->life > 0)
 		{
 			item->data->life--;
-			App->renderer->Blit(item->data->light, x, y);
+			App->renderer->Blit(bump_light, x, y);
 		}
 		else
-			App->renderer->Blit(item->data->idle, x, y);
+			App->renderer->Blit(bump_idle, x, y);
 		item = item->next;
 	}
 	//Draw all sensors
@@ -101,6 +102,22 @@ void ModuleSceneIntro::Draw()
 		
 	}
 
+	p2List_item<Bumper*>* item2;
+	item2 = bar_list.getFirst();
+
+	while (item2 != NULL)
+	{
+		item2->data->body->GetPosition(x, y);
+		if (item2->data->life > 0)
+		{
+			item2->data->life--;
+			App->renderer->Blit(bar_light, x, y, NULL, 1.0f, item2->data->body->GetRotation());
+		}
+		else
+			App->renderer->Blit(bar_idle, x, y, NULL, 1.0f, item2->data->body->GetRotation());
+		item2 = item2->next;
+	}
+
 
 	//Draw all circles (DEBUG)
 	p2List_item<PhysBody*>* c = circles.getFirst();
@@ -116,10 +133,12 @@ void ModuleSceneIntro::Draw()
 
 void ModuleSceneIntro::CreateMap()
 {
-	bumper1.light = bumper2.light = bumper3.light = bumper4.light = bumper5.light = bumper6.light = App->textures->Load("pinball/bumper_light.png");
-	bumper1.idle = bumper2.idle = bumper3.idle = bumper4.idle = bumper5.idle = bumper6.idle = App->textures->Load("pinball/bumper_idle.png");
+	bump_light = App->textures->Load("pinball/bumper_light.png");
+	bump_idle = App->textures->Load("pinball/bumper_idle.png");
+	bump_fx = App->audio->LoadFx("pinball/Sounds/bumper.ogg");
 
-	bumper1.fx = bumper2.fx = bumper3.fx = bumper4.fx = bumper5.fx = bumper6.fx = App->audio->LoadFx("pinball/Sounds/bumper.ogg");
+	bar_light = App->textures->Load("pinball/bar_light.png");
+	bar_idle = App->textures->Load("pinball/bar_idle.png");
 
 	light_cercle1.idle = light_cercle2.idle = light_cercle3.idle = light_cercle4.idle = light_cercle5.idle = light_cercle6.idle = light_cercle7.idle = light_cercle8.idle = light_cercle9.idle = light_cercle10.idle = light_cercle11.idle = light_cercle12.idle = App->textures->Load("pinball/circle_idle.png");
 	light_cercle1.light = light_cercle2.light = light_cercle3.light = light_cercle4.light = light_cercle5.light = light_cercle6.light = light_cercle7.light = light_cercle8.light = light_cercle9.light = light_cercle10.light = light_cercle11.light = light_cercle12.light = App->textures->Load("pinball/circle_idle.png");
@@ -211,65 +230,28 @@ void ModuleSceneIntro::CreateMap()
 	};
 	App->physics->CreateChain(0, 0, triangle_r, 6, b2_staticBody);
 
-	int bar_down_l[12] = {
-		68, 122,
-		68, 94,
-		75, 88,
-		82, 94,
-		82, 121,
-		75, 127
+	int bar[16] = {
+		0, 7,
+		4, 1,
+		9, 1,
+		14, 7,
+		14, 33,
+		10, 37,
+		4, 37,
+		0, 32
 	};
-	App->physics->CreateChain(0, 0, bar_down_l, 12, b2_staticBody);
 
-	int bar_down_r[12] = {
-		287, 94,
-		287, 121,
-		292, 126,
-		299, 120,
-		300, 93,
-		293, 87
-	};
-	App->physics->CreateChain(0, 0, bar_down_r, 12, b2_staticBody);
+	CreateBumper(App->physics->CreateChain(68, 89, bar, 16, b2_staticBody), &bar_list, true, this);
+	CreateBumper(App->physics->CreateChain(101, 62, bar, 16, b2_staticBody), &bar_list, true, this);
+	CreateBumper(App->physics->CreateChain(254, 62, bar, 16, b2_staticBody), &bar_list, true, this);
+	CreateBumper(App->physics->CreateChain(286, 89, bar, 16, b2_staticBody), &bar_list, true, this);
 
-	int bar_up_l[12] = {
-		101, 67,
-		109, 61,
-		115, 66,
-		115, 93,
-		108, 99,
-		101, 93
-	};
-	App->physics->CreateChain(0, 0, bar_up_l, 12, b2_staticBody);
-
-	int bar_up_r[12] = {
-		261, 100,
-		267, 93,
-		267, 67,
-		259, 61,
-		254, 69,
-		254, 95
-	};
-	App->physics->CreateChain(0, 0, bar_up_r, 12, b2_staticBody);
-
-	bumper1.body = App->physics->CreateCircle(291, 195, 16, b2_staticBody);
-	bumper1.body->listener = this;
-	bumper2.body = App->physics->CreateCircle(139, 267, 16, b2_staticBody);
-	bumper2.body->listener = this;
-	bumper3.body = App->physics->CreateCircle(230, 267, 16, b2_staticBody);
-	bumper3.body->listener = this;
-	bumper4.body = App->physics->CreateCircle(230, 133, 16, b2_staticBody);
-	bumper4.body->listener = this;
-	bumper5.body = App->physics->CreateCircle(139, 133, 16, b2_staticBody);
-	bumper5.body->listener = this;
-	bumper6.body = App->physics->CreateCircle(77, 195, 16, b2_staticBody);
-	bumper6.body->listener = this;
-
-	bump_list.add(&bumper1);
-	bump_list.add(&bumper2);
-	bump_list.add(&bumper3);
-	bump_list.add(&bumper4);
-	bump_list.add(&bumper5);
-	bump_list.add(&bumper6);
+	CreateBumper(App->physics->CreateCircle(291, 195, 16, b2_staticBody), &bump_list, true, this);
+	CreateBumper(App->physics->CreateCircle(139, 267, 16, b2_staticBody), &bump_list, true, this);
+	CreateBumper(App->physics->CreateCircle(230, 267, 16, b2_staticBody), &bump_list, true, this);
+	CreateBumper(App->physics->CreateCircle(230, 133, 16, b2_staticBody), &bump_list, true, this);
+	CreateBumper(App->physics->CreateCircle(139, 133, 16, b2_staticBody), &bump_list, true, this);
+	CreateBumper(App->physics->CreateCircle(77, 195, 16, b2_staticBody),  &bump_list, true, this);
 
 	light_cercle1.body = App->physics->CreateCircle(183, 166, 7, b2_staticBody, true);
 	light_cercle1.body->listener = this;
@@ -311,6 +293,16 @@ void ModuleSceneIntro::CreateMap()
 	
 }
 
+Bumper* ModuleSceneIntro::CreateBumper(PhysBody* _body, p2List<Bumper*>* list, bool isListening, Module* _module, uint _life)
+{
+	Bumper* bump = new Bumper(_body, _life);
+	if (isListening)
+		bump->body->listener = _module;
+	list->add(bump);
+
+	return bump;
+}
+
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
@@ -323,9 +315,28 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		if (item->data->body == bodyA)
 		{
 			item->data->life = LIGHT_LIFE;
-			App->audio->PlayFx(item->data->fx);
+			App->audio->PlayFx(bump_fx);
+			//App->player->score += 10; TODO: ADD score
 			return;
 		}
 		item = item->next;
 	}
+<<<<<<< HEAD
+=======
+
+
+	p2List_item<Bumper*>* item2;
+	item2 = bar_list.getFirst();
+
+	while (item2 != NULL)
+	{
+		if (item2->data->body == bodyA)
+		{
+			item2->data->life = LIGHT_LIFE;
+			App->audio->PlayFx(bump_fx);
+			return;
+		}
+		item2 = item2->next;
+	}
+>>>>>>> refs/remotes/origin/master
 }

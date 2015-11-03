@@ -28,22 +28,32 @@ public:
 	update_status Update();
 	void Draw();
 	bool CleanUp();
+	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
 private:
 	
 	void CreateMap();
-
+	void DrawScore();
 	void RespawnBall();
 
 public:
 	
 	Entity ball;
 	iPoint ball_respawn;
-	int lives;
+	int lifes;
 
-	SDL_Texture* ball_lives;
+	SDL_Texture* ball_lifes;
+	SDL_Texture* plunger_top; //Just for a visual effect
 
 	Entity flipper_right;
 	Entity flipper_left; 
 	Entity plunger;
+
+	Entity barrier;
+	PhysBody* turn_off_barrier;
+	PhysBody* turn_on_barrier;
+
+	//Score
+	SDL_Texture* numbers;
+	int score;
 };
