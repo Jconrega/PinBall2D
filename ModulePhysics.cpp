@@ -17,7 +17,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app,
 	world = NULL;
 	mouse_joint = NULL;
 	mouse_clicked = NULL;
-	debug = true;
+	debug = false;
 }
 
 // Destructor
@@ -204,7 +204,7 @@ update_status ModulePhysics::PostUpdate()
 
 //Create functions-----------------------------------------------------------------------------------------------------------
 
-PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, b2BodyType type, bool sensor)
+PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, b2BodyType type, bool sensor, float restitution)
 {
 	b2BodyDef body;
 	body.type = type;
@@ -218,7 +218,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, b2BodyType type,
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
-	fixture.restitution = 0.0f;
+	fixture.restitution = restitution;
 	fixture.isSensor = sensor;
 
 	b->CreateFixture(&fixture);
@@ -289,7 +289,7 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, b2BodyType type)
+PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, b2BodyType type, bool sensor, float restitution)
 {
 	b2BodyDef body;
 	body.type = type;
@@ -310,6 +310,8 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, b2Body
 
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.isSensor = sensor;
+	fixture.restitution = restitution;
 
 	b->CreateFixture(&fixture);
 

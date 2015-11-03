@@ -46,10 +46,10 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	PhysBody* CreateCircle(int x, int y, int radius, b2BodyType type, bool sensor = false);
+	PhysBody* CreateCircle(int x, int y, int radius, b2BodyType type, bool sensor = false, float restitution = 0.0f);
 	PhysBody* CreateRectangle(int x, int y, int width, int height, b2BodyType type);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
-	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType type);
+	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType type, bool sensor = false, float restitution = 0.0f);
 	PhysBody* CreatePolygon(int x, int y, int width, int height, int* points, int size, b2BodyType type);
 
 	void CreateRevoluteJoint(PhysBody* body_a, PhysBody* body_b, int anchor_a_x, int anchor_a_y, int anchor_b_x, int anchor_b_y, int min_angle = -360, int max_angle = 360);
@@ -58,9 +58,11 @@ public:
 	// b2ContactListener ---
 	void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
 
-private:
+public:
 
 	bool debug;
+
+private:
 	b2World* world;
 	b2MouseJoint* mouse_joint;
 	b2Body* ground;

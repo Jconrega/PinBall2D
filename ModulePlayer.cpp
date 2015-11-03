@@ -74,19 +74,26 @@ update_status ModulePlayer::Update()
 		else
 			plunger.body->body->SetGravityScale(1);
 	}
-	for (int i = 0; i < lifes; i++)
-	{
-		App->renderer->Blit(ball_lifes, 510 - (20 * i), 127);
-	}
+	
 
-	Draw();
-	DrawScore();
+	if (App->physics->debug == false)
+	{
+		Draw();
+		DrawScore();
+	}
+	
 	
 	return UPDATE_CONTINUE;
 }
 
 void ModulePlayer::Draw()
 {
+	//Draw balls lifes
+	for (int i = 0; i < lifes; i++)
+	{
+		App->renderer->Blit(ball_lifes, 510 - (20 * i), 127);
+	}
+
 	int x, y;
 
 	ball.body->GetPosition(x, y);
