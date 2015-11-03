@@ -30,3 +30,11 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "American Dragon Pinball"
+
+//Pinball stuff
+#define LIGHT_LIFE 500
+#define BUMP_CIRCLE_SCORE 100
+#define BUMP_BAR_SCORE 500
+#define BUMP_TRIANGLE_SCORE 250
+#define BUMP_SENSOR_SCORE 50
+#define MAX_LIFES 5

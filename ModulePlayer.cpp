@@ -6,8 +6,7 @@
 #include "ModuleTextures.h"
 #include "ModuleRender.h"
 #include "ModuleInput.h"
-
-#define MAX_LIFES 5
+#include "ModuleAudio.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -29,6 +28,10 @@ bool ModulePlayer::Start()
 	score = 0;
 
 	numbers = App->textures->Load("pinball/numbers.png");
+	flipper_fx = App->audio->LoadFx("pinball/flipper.ogg");
+	plunger_fx = App->audio->LoadFx("pinball/plunger.ogg");
+	game_over_fx = App->audio->LoadFx("pinball/game_over.ogg");
+	ball_over_fx = App->audio->LoadFx("pinball/ball_over.ogg");
 
 	CreateMap();
 
@@ -40,6 +43,16 @@ bool ModulePlayer::CleanUp()
 {
 	LOG("Unloading player");
 
+	App->textures->Unload(ball_lifes);
+	App->textures->Unload(plunger_top);
+	App->textures->Unload(numbers);
+
+	App->textures->Unload(ball.texture);
+	App->textures->Unload(flipper_right.texture);
+	App->textures->Unload(flipper_left.texture);
+	App->textures->Unload(plunger.texture);
+	App->textures->Unload(barrier.texture);
+
 	return true;
 }
 
@@ -47,22 +60,30 @@ bool ModulePlayer::CleanUp()
 update_status ModulePlayer::Update()
 {
 	int x, y;
+	
+	//Checks game over
 	ball.body->GetPosition(x, y);
 	if (y > 600)
 		RespawnBall();
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 	{
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
+			App->audio->PlayFx(flipper_fx);
 		flipper_right.body->AngularImpulse(360);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 	{
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
+			App->audio->PlayFx(flipper_fx);
 		flipper_left.body->AngularImpulse(-360);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
 	{
+		
+		App->audio->PlayFx(plunger_fx);
 		plunger.body->Force(0, -500, 0, 0);
 	}
 	else
@@ -74,19 +95,26 @@ update_status ModulePlayer::Update()
 		else
 			plunger.body->body->SetGravityScale(1);
 	}
-	for (int i = 0; i < lifes; i++)
-	{
-		App->renderer->Blit(ball_lifes, 510 - (20 * i), 127);
-	}
+	
 
-	Draw();
-	DrawScore();
+	if (App->physics->debug == false)
+	{
+		Draw();
+		DrawScore();
+	}
+	
 	
 	return UPDATE_CONTINUE;
 }
 
 void ModulePlayer::Draw()
 {
+	//Draw balls lifes
+	for (int i = 0; i < lifes; i++)
+	{
+		App->renderer->Blit(ball_lifes, 510 - (20 * i), 127);
+	}
+
 	int x, y;
 
 	ball.body->GetPosition(x, y);
@@ -179,9 +207,14 @@ void ModulePlayer::RespawnBall()
 	{
 		lifes = MAX_LIFES;
 		score = 0;
+		App->audio->PlayFx(game_over_fx);
 	}
 	else
+	{
 		lifes--;
+		App->audio->PlayFx(ball_over_fx);
+	}
+	
 }
 
 void ModulePlayer::DrawScore()
@@ -232,4 +265,3 @@ void ModulePlayer::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		return;
 	}
 }
-
